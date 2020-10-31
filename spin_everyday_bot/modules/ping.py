@@ -11,27 +11,20 @@
 #  GNU Affero General Public License for more details.
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import logging
+from datetime import datetime
 
-from aiogram import Dispatcher, Bot
-from spin_everyday_bot.cli import init_parser, parse_args
-from spin_everyday_bot.config import config_ctx, Settings
-from spin_everyday_bot.lang import tr as _
-from spin_everyday_bot.modules import router as modules
+from aiogram import Router, Bot
+from aiogram.api.types import Message
 
+from ..lang import tr as _
 
-def main():
-    logging.basicConfig(level=logging.DEBUG)
-    args = parse_args(init_parser())
-    if args.fetch_type == 'webhook':
-        raise NotImplementedError(_('Getting updates via webhook is not implemented yet'))
-    settings = Settings()
-    config_ctx.set(settings)
-
-    bot = Bot(settings.token, parse_mode='HTML')
-    dp = Dispatcher()
-    dp.include_router(modules)
-    dp.run_polling(bot)
+router = Router()
 
 
-main()
+@router.message(commands=['ping'])
+async def ping(message: Message, bot: Bot):
+    ping_time = (datetime.utcnow() - message.date.replace(tzinfo=None)).total_seconds()
+    m = await message.reply(_('Pong!\nAnswer time: {0:.2f}').format(ping_time))
+    ping_time = (datetime.utcnow() - m.date.replace(tzinfo=None)).total_seconds()
+    await bot.edit_message_text(m.text + _('\nTelegram ping time: {0:.2f}').format(ping_time),
+                                message_id=m.message_id, chat_id=m.chat.id)

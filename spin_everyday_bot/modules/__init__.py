@@ -11,27 +11,8 @@
 #  GNU Affero General Public License for more details.
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import logging
+from aiogram import Router
+from .ping import router as ping
 
-from aiogram import Dispatcher, Bot
-from spin_everyday_bot.cli import init_parser, parse_args
-from spin_everyday_bot.config import config_ctx, Settings
-from spin_everyday_bot.lang import tr as _
-from spin_everyday_bot.modules import router as modules
-
-
-def main():
-    logging.basicConfig(level=logging.DEBUG)
-    args = parse_args(init_parser())
-    if args.fetch_type == 'webhook':
-        raise NotImplementedError(_('Getting updates via webhook is not implemented yet'))
-    settings = Settings()
-    config_ctx.set(settings)
-
-    bot = Bot(settings.token, parse_mode='HTML')
-    dp = Dispatcher()
-    dp.include_router(modules)
-    dp.run_polling(bot)
-
-
-main()
+router = Router()
+router.include_router(ping)

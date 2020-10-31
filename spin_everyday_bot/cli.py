@@ -22,8 +22,8 @@ from .lang import tr as _
 @dataclass()
 class Args:
     fetch_type: str
-    host: str
-    port: int
+    host: Optional[str] = None
+    port: Optional[int] = None
 
 
 def init_parser() -> ArgumentParser:
@@ -36,7 +36,7 @@ def init_parser() -> ArgumentParser:
     )
     run_type.add_parser('polling', help=_('Run with polling (default)'))
     webhook = run_type.add_parser('webhook', help=_('Run with webhooks (not supported yet)'))
-    webhook.add_argument('--host', '-h', help=_('Host to listen at'))
+    webhook.add_argument('--host', '-H', help=_('Host to listen at'))
     webhook.add_argument('--port', '-p', type=int, help=_('Port to listen at'))
 
     return parser

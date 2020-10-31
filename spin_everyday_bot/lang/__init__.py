@@ -1,2 +1,2 @@
-def tr(*args):
-    pass  # stub
+def tr(arg: str) -> str:
+    return arg  # stub
