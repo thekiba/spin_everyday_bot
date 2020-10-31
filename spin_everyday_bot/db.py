@@ -9,6 +9,7 @@ class User(db.Model):
     tg_id = db.Column(db.Integer(), nullable=False)
     username = db.Column(db.String())
     full_name = db.Column(db.String(), nullable=False)
+    language = db.Column(db.String())
     wotd_registered = db.Column(db.Boolean(), nullable=False, default=False)
     wotd = db.Column(db.Boolean(), nullable=False, default=False)
 
@@ -26,11 +27,8 @@ class Chat(db.Model):
     __tablename__ = 'chat'
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     tg_id = db.Column(db.Integer(), nullable=False)
-    # users = relationship('User', secondary='chat_users', collection_class=set)
-    # texts = relationship('ChatTexts')
     drawing_name = db.Column(db.String())
     winner_id = db.Column(db.Integer(), db.ForeignKey(User.id))
-    # winner = relationship('User')
     language = db.Column(db.String())
     timezone = db.Column(db.Integer(), nullable=False, default=0)
     auto_drawing = db.Column(db.Time())
@@ -46,9 +44,7 @@ class ChatUser(db.Model):
     __tablename__ = 'chat_user'
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer(), db.ForeignKey(User.id), nullable=False)
-    # user = relationship('User')
     chat_id = db.Column(db.Integer(), db.ForeignKey(Chat.id), nullable=False)
-    # chat = relationship('Chat')
     can_change_name = db.Column(db.Boolean())
     win_count = db.Column(db.Integer(), nullable=False, default=0)
 
