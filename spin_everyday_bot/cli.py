@@ -35,3 +35,6 @@ def parse_args(
 ) -> Args:
     args = parser.parse_args(argv)
     return args_cls(**args.__dict__)
+
+
+__all__ = ('parse_args', 'init_parser', 'Args')

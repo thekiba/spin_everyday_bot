@@ -52,10 +52,13 @@ class ChatUser(db.Model):
         return f'<ChatUser {self.user_id} in chat {self.chat_id}>'
 
 
-class ChatTexts(db.Model):
+class ChatText(db.Model):
     __tablename__ = 'chat_text'
     id = db.Column(db.Integer(), primary_key=True)
     chat_id = db.Column(db.Integer(), db.ForeignKey(Chat.id))
     group = db.Column(db.Integer(), nullable=False)
     order = db.Column(db.Integer(), nullable=False)
     text = db.Column(db.String(), nullable=False)
+
+
+__all__ = ('db', 'User', 'Chat', 'ChatUser', 'ChatText')
