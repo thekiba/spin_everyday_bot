@@ -1,5 +1,3 @@
-from aiogram import Bot, Dispatcher
-from .config import TOKEN
+from .cli import init_parser, parse_args
 
-bot = Bot(TOKEN)
-dp = Dispatcher()
+parse_args(init_parser())
