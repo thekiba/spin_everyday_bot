@@ -16,6 +16,7 @@ from html import escape
 from aiogram import Router
 from aiogram.api.types import Message
 from ..db import user_ctx, chat_ctx, chat_user_ctx
+from ..lang import tr as _
 
 router = Router()
 
@@ -25,5 +26,10 @@ async def whoami(message: Message):
     user = user_ctx.get()
     chat = chat_ctx.get()
     chat_user = chat_user_ctx.get()
-    await message.reply(f"You are {escape(repr(user.full_name))!r} in chat {escape(repr(chat))}"
-                        f" (extra={escape(repr(chat_user))})")
+    await message.reply(
+        _("You are {0} in chat {1} (extra={2})").format(
+            escape(repr(user)),
+            escape(repr(chat)),
+            escape(repr(chat_user)),
+        )
+    )
