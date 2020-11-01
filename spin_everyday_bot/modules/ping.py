@@ -15,16 +15,18 @@ from datetime import datetime
 
 from aiogram import Router, Bot
 from aiogram.api.types import Message
-
+from ..db import User
 from ..lang import tr as _
 
 router = Router()
 
 
 @router.message(commands=['ping'])
-async def ping(message: Message, bot: Bot):
+async def ping(message: Message):
     ping_time = (datetime.utcnow() - message.date.replace(tzinfo=None)).total_seconds()
-    m = await message.reply(_('Pong!\nAnswer time: {0:.2f}').format(ping_time))
-    ping_time = (datetime.utcnow() - m.date.replace(tzinfo=None)).total_seconds()
-    await bot.edit_message_text(m.text + _('\nTelegram ping time: {0:.2f}').format(ping_time),
-                                message_id=m.message_id, chat_id=m.chat.id)
+    db_ping_t = datetime.utcnow()
+    await User.get(1)
+    db_ping = (datetime.utcnow() - db_ping_t).total_seconds()
+    await message.reply(
+        _('Pong!\nAnswer time: {0:.2f}s\nDatabase ping: {1:.2f}s').format(ping_time, db_ping)
+    )
