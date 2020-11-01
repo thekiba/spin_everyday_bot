@@ -11,6 +11,8 @@
 #  GNU Affero General Public License for more details.
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from contextvars import ContextVar
+from typing import Optional
 
 from gino import Gino
 
@@ -86,4 +88,8 @@ class ChatText(db.Model):
     text = db.Column(db.String(), nullable=False)
 
 
-__all__ = ('db', 'User', 'Chat', 'ChatUser', 'ChatText')
+user_ctx: ContextVar[Optional[User]] = ContextVar('db_user_ctx', default=None)
+chat_ctx: ContextVar[Optional[Chat]] = ContextVar('db_chat_ctx', default=None)
+chat_user_ctx: ContextVar[Optional[ChatUser]] = ContextVar('db_chat_user_ctx', default=None)
+
+__all__ = ('db', 'User', 'Chat', 'ChatUser', 'ChatText', 'user_ctx', 'chat_ctx', 'chat_user_ctx')

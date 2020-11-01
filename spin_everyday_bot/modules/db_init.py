@@ -12,12 +12,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from aiogram import Router
-
-from .chat_user_middleware import router as chat_user_middleware
-from .db_init import router as db_init
-from .ping import router as ping
-from .whoami import router as whoami
+from ..config import config_ctx
+from ..db import db
 
 router = Router()
-for _r in (db_init, chat_user_middleware, ping, whoami):
-    router.include_router(_r)
+
+
+@router.startup()
+async def on_startup():
+    config = config_ctx.get()
+    await db.set_bind(config.db_address)
