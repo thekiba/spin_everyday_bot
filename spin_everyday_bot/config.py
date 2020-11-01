@@ -14,12 +14,13 @@
 
 from contextvars import ContextVar
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, PostgresDsn
 
 
 class Settings(BaseSettings):  # todo: import settings from .ini
     token: str
     superuser: int
+    db_address: PostgresDsn = 'postgresql://bot:spinbot@localhost/spin_everyday_bot'
 
 
 config_ctx: ContextVar[Settings] = ContextVar('settings_ctx')

@@ -18,7 +18,7 @@ db = Gino()
 
 
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     tg_id = db.Column(db.Integer(), nullable=False)
     username = db.Column(db.String())
@@ -34,11 +34,11 @@ class User(db.Model):
     def effective_name(self):
         if self.username:
             return ('@' if not self.username.startswith('@') else '') + self.username
-        return self.full_name or f'deleted id{self.id}'  # full name or deleted account
+        return self.full_name or f'deleted (id{self.id})'  # full name or deleted account
 
 
 class Chat(db.Model):
-    __tablename__ = 'chat'
+    __tablename__ = 'chats'
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     tg_id = db.Column(db.Integer(), nullable=False)
     drawing_name = db.Column(db.String())
@@ -48,6 +48,7 @@ class Chat(db.Model):
     auto_drawing = db.Column(db.Time())
     fast_drawing = db.Column(db.Boolean())
     admin_drawing = db.Column(db.Boolean())
+    opt_in_drawing = db.Column(db.Boolean())
     show_userlist = db.Column(db.Boolean())
 
     def __repr__(self):
@@ -55,7 +56,7 @@ class Chat(db.Model):
 
 
 class ChatUser(db.Model):
-    __tablename__ = 'chat_user'
+    __tablename__ = 'chat_users'
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer(), db.ForeignKey(User.id), nullable=False)
     chat_id = db.Column(db.Integer(), db.ForeignKey(Chat.id), nullable=False)
@@ -66,8 +67,18 @@ class ChatUser(db.Model):
         return f'<ChatUser {self.user_id} in chat {self.chat_id}>'
 
 
+class WinHistoryItem(db.Model):
+    __tablename__ = 'win_history'
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    chat_user_id = db.Column(db.Integer(), db.ForeignKey(ChatUser.id), nullable=False)
+    win_date = db.Column(db.DateTime(), nullable=False)
+
+    def __repr__(self):
+        return f'<WinHistoryItem at {self.win_date} for {self.chat_user_id}>'
+
+
 class ChatText(db.Model):
-    __tablename__ = 'chat_text'
+    __tablename__ = 'chat_texts'
     id = db.Column(db.Integer(), primary_key=True)
     chat_id = db.Column(db.Integer(), db.ForeignKey(Chat.id))
     group = db.Column(db.Integer(), nullable=False)
